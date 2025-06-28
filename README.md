@@ -17,6 +17,6 @@ It supports **autosave**, **encryption**, **custom fonts**, **PDF export**, and 
 ## 🧪 Demo
 
 👉 [Live Demo]( https://inviszero.github.io/Notepad/)  
-*(Replace this link with your actual deployed link on GitHub Pages or Vercel)*
+
 
 
