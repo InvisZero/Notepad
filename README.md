@@ -16,19 +16,7 @@ It supports **autosave**, **encryption**, **custom fonts**, **PDF export**, and 
 
 ## 🧪 Demo
 
-👉 [Live Demo](https://your-username.github.io/temporary-notepad)  
+👉 [Live Demo]( https://inviszero.github.io/Notepad/)  
 *(Replace this link with your actual deployed link on GitHub Pages or Vercel)*
 
-## 📂 How to Use
-
-1. Clone this repository or [Download as ZIP](https://github.com/your-username/temporary-notepad/archive/refs/heads/main.zip)
-2. Open `index.html` in any modern browser
-3. Start writing! No login or setup required
-
-## 📸 Screenshot
-
-![screenshot](screenshot.png)  
-*(Include a screenshot of the UI if you like)*
-
-## 📦 Folder Structure
 
