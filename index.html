@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Temporary Notepad</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    h1 {
+      color: #111827;
+      margin-bottom: 1rem;
+    }
+    input, textarea, select {
+      width: 90%;
+      max-width: 700px;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      font-size: 1rem;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    textarea {
+      height: 300px;
+      resize: vertical;
+    }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      background: #2563eb;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #1e40af;
+    }
+    .clear-btn {
+      background: #ef4444;
+    }
+    .clear-btn:hover {
+      background: #b91c1c;
+    }
+    .footer {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <h1>Notepad</h1>
+  <input type="text" id="title" placeholder="Note Title" />
+  <select id="fontSelector">
+    <option value="Arial, sans-serif">Arial</option>
+    <option value="Georgia, serif">Georgia</option>
+    <option value="Courier New, monospace">Courier New</option>
+    <option value="Verdana, sans-serif">Verdana</option>
+    <option value="Times New Roman, serif">Times New Roman</option>
+  </select>
+  <textarea id="note" placeholder="Start typing your note..."></textarea>
+  
+  <div class="button-group">
+    <button onclick="downloadPDF()">Save as PDF</button>
+    <button class="clear-btn" onclick="clearAll()">Clear All</button>
+  </div>
+  
+  <div class="footer">Autosaved. Font and notes saved in your browser.</div>
+
+  <!-- html2pdf CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    const note = document.getElementById("note");
+    const title = document.getElementById("title");
+    const fontSelector = document.getElementById("fontSelector");
+
+    const encrypt = (text) => btoa(unescape(encodeURIComponent(text)));
+    const decrypt = (text) => decodeURIComponent(escape(atob(text)));
+
+    // Load saved data
+    const savedTitle = localStorage.getItem("noteTitle");
+    const savedNote = localStorage.getItem("noteBody");
+    const savedFont = localStorage.getItem("noteFont");
+
+    if (savedTitle) title.value = decrypt(savedTitle);
+    if (savedNote) note.value = decrypt(savedNote);
+    if (savedFont) {
+      fontSelector.value = decrypt(savedFont);
+      note.style.fontFamily = decrypt(savedFont);
+    }
+
+    // Autosave
+    title.addEventListener("input", () => {
+      localStorage.setItem("noteTitle", encrypt(title.value));
+    });
+    note.addEventListener("input", () => {
+      localStorage.setItem("noteBody", encrypt(note.value));
+    });
+    fontSelector.addEventListener("change", () => {
+      const font = fontSelector.value;
+      note.style.fontFamily = font;
+      localStorage.setItem("noteFont", encrypt(font));
+    });
+
+    function downloadPDF() {
+      const pdfContent = document.createElement("div");
+      pdfContent.style.fontFamily = fontSelector.value;
+      pdfContent.innerHTML = `<h2>${title.value || "Untitled Note"}</h2><p>${note.value.replace(/\n/g, "<br>")}</p>`;
+      html2pdf().set({
+        margin: 10,
+        filename: `${title.value || "note"}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      }).from(pdfContent).save();
+    }
+
+    function clearAll() {
+      if (confirm("Are you sure you want to clear all content?")) {
+        title.value = "";
+        note.value = "";
+        fontSelector.value = "Arial, sans-serif";
+        note.style.fontFamily = "Arial, sans-serif";
+        localStorage.removeItem("noteTitle");
+        localStorage.removeItem("noteBody");
+        localStorage.removeItem("noteFont");
+      }
+    }
+  </script>
+</body>
+</html>
