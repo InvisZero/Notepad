@@ -17,8 +17,11 @@
     </div>
 
     <div class="right-controls">
-      <button onclick="toggleDarkMode()" id="darkModeBtn">🌙 Dark Mode</button>
-    </div>
+  <label class="theme-switch">
+    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+    <span class="slider"></span>
+  </label>
+</div>
   </div>
 
   <h1>Notepad</h1>

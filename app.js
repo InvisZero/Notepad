@@ -1,7 +1,7 @@
 const note = document.getElementById("note");
 const title = document.getElementById("title");
 const fontSelector = document.getElementById("fontSelector");
-const darkModeBtn = document.getElementById("darkModeBtn");
+const darkModeToggle = document.getElementById("darkModeToggle");
 
 const encrypt = (text) => btoa(unescape(encodeURIComponent(text)));
 const decrypt = (text) => decodeURIComponent(escape(atob(text)));
@@ -23,7 +23,7 @@ if (savedFont) {
 
 if (savedTheme === "enabled") {
   document.body.classList.add("dark");
-  darkModeBtn.textContent = "☀️ Light Mode";
+  darkModeToggle.checked = true;
 }
 
 // Autosave
@@ -73,10 +73,10 @@ function toggleDarkMode() {
 
   if (isDark) {
     localStorage.setItem("darkMode", "enabled");
-    darkModeBtn.textContent = "☀️ Light Mode";
+    darkModeToggle.checked = true;
   } else {
     localStorage.setItem("darkMode", "disabled");
-    darkModeBtn.textContent = "🌙 Dark Mode";
+    darkModeToggle.checked = false;
   }
 }
 

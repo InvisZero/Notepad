@@ -10,7 +10,7 @@ body {
 }
 
 body.dark {
-  background: #111827;
+  background: #010102;
   color: #f9fafb;
 }
 
@@ -64,7 +64,7 @@ textarea {
 
 button {
   padding: 0.6rem 1.2rem;
-  background: #2563eb;
+  background: #363636;
   color: white;
   font-size: 1rem;
   border: none;
@@ -74,9 +74,50 @@ button {
 }
 
 button:hover {
-  background: #1e40af;
+  background: #363636;
 }
 
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #cbd5e1;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #363636;
+}
+
+input:checked + .slider::before {
+  transform: translateX(26px);
+}
 .clear-btn {
   background: #ef4444;
 }
