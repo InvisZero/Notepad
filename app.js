@@ -34,41 +34,39 @@ if (savedTheme === "enabled") {
 
 // Stats
 function updateStats() {
-  const text = note.value;
+  const text = note.value || "";
 
-  const words = text.trim()
+  const words = text.trim().length > 0
     ? text.trim().split(/\s+/).length
     : 0;
 
   const characters = text.replace(/\s/g, "").length;
 
-  const lines = text.trim()
+  const lines = text.trim().length > 0
     ? text.split("\n").filter(line => line.trim().length > 0).length
     : 0;
 
-  const abbreviations =[
-  "Dr.", "Mr.", "Mrs.", "Ms.", "Prof.", "Sr.", "Jr.","e.g.","i.e",
-  "vs.", "U.S.", "U.K.", "St.", "Gen.", "Col.", "Maj.", "Capt.", 
-  "Sgt.", "Rev.", "Gov.", "Sen.", "Ave.", "Rd.", "Blvd.", "Apt.", "Co.", 
-  "Corp.", "Inc.", "Ltd.", "Jan.", "Feb.", "Mar.", "Apr.", "Aug.", "Sept.", 
-  "Oct.", "Nov.", "Dec.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat.", 
-  "Sun.", "a.m.", "p.m.", "B.C.", "A.D.", "in.", "ft.", "lbs.", "oz.", 
-  "gal.", "qt.", "pt.", "vol.", "ed.", "pp."
-];
+  const abbreviations = [
+    "Dr.", "Mr.", "Mrs.", "Ms.", "Prof.",
+    "Sr.", "Jr.", "etc.", "e.g.", "i.e.",
+    "vs.", "U.S.", "U.K."
+  ];
 
   let cleanText = text;
 
-  abbreviations.forEach(abbr => {
-    const escaped = abbr.replace(/\./g, "\\.");
+  for (let i = 0; i < abbreviations.length; i++) {
+    const escaped = abbreviations[i].replace(/\./g, "\\.");
     cleanText = cleanText.replace(new RegExp(escaped, "g"), "");
-  });
+  }
 
   const sentences = (cleanText.match(/[.!?]+/g) || []).length;
 
   stats.textContent =
     `Words: ${words} | Characters: ${characters} | Lines: ${lines} | Sentences: ${sentences}`;
 }
+
 updateStats();
+
 
 // Autosave
 title.addEventListener("input", () => {
@@ -138,3 +136,4 @@ function clearAll() {
     updateStats();
   }
 }
+//for refresh
