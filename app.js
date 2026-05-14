@@ -2,18 +2,24 @@ const note = document.getElementById("note");
 const title = document.getElementById("title");
 const fontSelector = document.getElementById("fontSelector");
 const darkModeToggle = document.getElementById("darkModeToggle");
+const stats = document.getElementById("stats");
 
 const encrypt = (text) => btoa(unescape(encodeURIComponent(text)));
 const decrypt = (text) => decodeURIComponent(escape(atob(text)));
 
-// Load saved data
 const savedTitle = localStorage.getItem("noteTitle");
 const savedNote = localStorage.getItem("noteBody");
 const savedFont = localStorage.getItem("noteFont");
 const savedTheme = localStorage.getItem("darkMode");
 
-if (savedTitle) title.value = decrypt(savedTitle);
-if (savedNote) note.value = decrypt(savedNote);
+// Load saved data
+if (savedTitle) {
+  title.value = decrypt(savedTitle);
+}
+
+if (savedNote) {
+  note.value = decrypt(savedNote);
+}
 
 if (savedFont) {
   const font = decrypt(savedFont);
@@ -26,6 +32,44 @@ if (savedTheme === "enabled") {
   darkModeToggle.checked = true;
 }
 
+// Stats
+function updateStats() {
+  const text = note.value;
+
+  const words = text.trim()
+    ? text.trim().split(/\s+/).length
+    : 0;
+
+  const characters = text.replace(/\s/g, "").length;
+
+  const lines = text.trim()
+    ? text.split("\n").filter(line => line.trim().length > 0).length
+    : 0;
+
+  const abbreviations =[
+  "Dr.", "Mr.", "Mrs.", "Ms.", "Prof.", "Sr.", "Jr.","e.g.","i.e",
+  "vs.", "U.S.", "U.K.", "St.", "Gen.", "Col.", "Maj.", "Capt.", 
+  "Sgt.", "Rev.", "Gov.", "Sen.", "Ave.", "Rd.", "Blvd.", "Apt.", "Co.", 
+  "Corp.", "Inc.", "Ltd.", "Jan.", "Feb.", "Mar.", "Apr.", "Aug.", "Sept.", 
+  "Oct.", "Nov.", "Dec.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat.", 
+  "Sun.", "a.m.", "p.m.", "B.C.", "A.D.", "in.", "ft.", "lbs.", "oz.", 
+  "gal.", "qt.", "pt.", "vol.", "ed.", "pp."
+];
+
+  let cleanText = text;
+
+  abbreviations.forEach(abbr => {
+    const escaped = abbr.replace(/\./g, "\\.");
+    cleanText = cleanText.replace(new RegExp(escaped, "g"), "");
+  });
+
+  const sentences = (cleanText.match(/[.!?]+/g) || []).length;
+
+  stats.textContent =
+    `Words: ${words} | Characters: ${characters} | Lines: ${lines} | Sentences: ${sentences}`;
+}
+updateStats();
+
 // Autosave
 title.addEventListener("input", () => {
   localStorage.setItem("noteTitle", encrypt(title.value));
@@ -33,18 +77,21 @@ title.addEventListener("input", () => {
 
 note.addEventListener("input", () => {
   localStorage.setItem("noteBody", encrypt(note.value));
+  updateStats();
 });
 
 fontSelector.addEventListener("change", () => {
   const font = fontSelector.value;
   note.style.fontFamily = font;
   localStorage.setItem("noteFont", encrypt(font));
+  updateStats();
 });
 
-// PDF Download
+// PDF
 function downloadPDF() {
   const pdfContent = document.createElement("div");
   pdfContent.style.fontFamily = fontSelector.value;
+
   pdfContent.innerHTML = `
     <h2>${title.value || "Untitled Note"}</h2>
     <p>${note.value.replace(/\n/g, "<br>")}</p>
@@ -65,18 +112,14 @@ function downloadPDF() {
     .save();
 }
 
-// Dark Mode
+// Dark mode
 function toggleDarkMode() {
   document.body.classList.toggle("dark");
 
-  const isDark = document.body.classList.contains("dark");
-
-  if (isDark) {
+  if (document.body.classList.contains("dark")) {
     localStorage.setItem("darkMode", "enabled");
-    darkModeToggle.checked = true;
   } else {
     localStorage.setItem("darkMode", "disabled");
-    darkModeToggle.checked = false;
   }
 }
 
@@ -91,5 +134,7 @@ function clearAll() {
     localStorage.removeItem("noteTitle");
     localStorage.removeItem("noteBody");
     localStorage.removeItem("noteFont");
+
+    updateStats();
   }
 }

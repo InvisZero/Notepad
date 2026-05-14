@@ -77,6 +77,19 @@ button:hover {
   background: #363636;
 }
 
+.stats {
+  width: 90%;
+  max-width: 700px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #4b5563;
+  text-align: left;
+}
+
+body.dark .stats {
+  color: #d1d5db;
+}
+
 .theme-switch {
   position: relative;
   display: inline-block;
