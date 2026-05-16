@@ -3,50 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Temporary Notepad</title>
+  <title>Notepad</title>
 
   <link rel="icon" type="image/png" href="note.png">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="top-bar">
-    <div class="left-controls">
-      <button onclick="downloadPDF()">Save as PDF</button>
-      <button class="clear-btn" onclick="clearAll()">Clear All</button>
+
+  <!-- Interactive Background -->
+  <canvas id="gridCanvas"></canvas>
+
+  <!-- App -->
+  <div class="app-shell">
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+
+        <div class="dropdown">
+          <button id="saveBtn">Save ▼</button>
+
+          <div class="dropdown-menu" id="saveMenu">
+            <button onclick="downloadPDF()">Save as PDF</button>
+            <button onclick="downloadTXT()">Save as TXT</button>
+            <button onclick="downloadHTML()">Save as HTML</button>
+          </div>
+        </div>
+
+        <button onclick="clearAll()">Clear</button>
+        <button onclick="undoEdit()">↶</button>
+        <button onclick="redoEdit()">↷</button>
+
+        <select id="fontSelector">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Tahoma, sans-serif">Tahoma</option>
+          <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Consolas, monospace">Consolas</option>
+        </select>
+
+        <button id="findToggleBtn">Find / Replace</button>
+      </div>
+
+      <div class="toolbar-right">
+        <button id="darkModeBtn" onclick="toggleDarkMode()">🌙</button>
+      </div>
     </div>
 
-    <div class="right-controls">
-  <label class="theme-switch">
-    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
-    <span class="slider"></span>
-  </label>
-</div>
-  </div>
+    <!-- Search -->
+    <div class="search-panel hidden" id="searchPanel">
+      <input type="text" id="searchInput" placeholder="Find">
+      <input type="text" id="replaceInput" placeholder="Replace">
 
-  <h1>Notepad</h1>
+      <button onclick="findPrevious()">Prev</button>
+      <button onclick="findNext()">Next</button>
+      <button onclick="replaceCurrent()">Replace</button>
+      <button onclick="replaceAll()">All</button>
 
-  <input type="text" id="title" placeholder="Note Title" />
+      <span id="matchInfo" class="match-badge">0 matches</span>
 
-  <select id="fontSelector">
-    <option value="Arial, sans-serif">Arial</option>
-    <option value="Georgia, serif">Georgia</option>
-    <option value="Courier New, monospace">Courier New</option>
-    <option value="Verdana, sans-serif">Verdana</option>
-    <option value="Times New Roman, serif">Times New Roman</option>
-  </select>
+      <button id="closeSearchBtn">✕</button>
+    </div>
 
-  <textarea id="note" placeholder="Start typing your note..."></textarea>
+    <!-- Document -->
+    <div class="editor-card">
+      <input
+        type="text"
+        id="title"
+        class="title-input"
+        placeholder="Untitled Document"
+      >
 
-  <div class="stats" id="stats">
-  Words: 0 | Characters: 0 | Lines: 0
-</div>
+      <div class="editor-divider"></div>
 
-  <div class="footer">
-    Autosaved. Font and notes saved in your browser.
+      <textarea id="note" placeholder="Start typing..."></textarea>
+    </div>
+
+    <!-- Footer -->
+    <div class="stats-card">
+      <span id="stats">Words: 0 | Characters: 0 | Lines: 0 | Sentences: 0</span>
+    </div>
+
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="app.js"></script>
+
 </body>
 </html>
